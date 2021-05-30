@@ -1,12 +1,9 @@
 # report.py
-# 2_16
+
 import csv
 
 def read_portfolio(filename):
-    '''
-    Read a stock portfolio file into a list of dictionaries with keys
-    name, shares, and price.
-    '''
+
     portfolio = []
     with open(filename) as f:
         rows = csv.reader(f)
@@ -25,9 +22,7 @@ def read_portfolio(filename):
     return portfolio
 
 def read_prices(filename):
-    '''
-    Read a CSV file of price data into a dict mapping names to prices.
-    '''
+
     prices = {}
     with open(filename) as f:
         rows = csv.reader(f)
@@ -38,11 +33,8 @@ def read_prices(filename):
                 pass
 
     return prices
-def make_report_data(portfolio, prices):
-    '''
-    Make a list of (name, shares, price, change) tuples given a portfolio list
-    and prices dictionary.
-    '''
+
+def make_report(portfolio, prices):
     rows = []
     for stock in portfolio:
         current_price = prices[stock['name']]
@@ -53,11 +45,14 @@ def make_report_data(portfolio, prices):
 
 portfolio = read_portfolio('Data/portfolio.csv')
 prices    = read_prices('Data/prices.csv')
+report = make_report(portfolio, prices)
 
-report = make_report_data(portfolio, prices)
+def print_report(report):
+    headers = ('Name', 'Shares', 'Price', 'Change')
+    print('%10s %10s %10s %10s' % headers)
+    print(('-' * 10 + ' ') * len(headers))
 
-headers = ('Name', 'Shares', 'Price', 'Change')
-print('%10s %10s %10s %10s' % headers)
-print(('-' * 10 + ' ') * len(headers))
-for row in report:
-    print('%10s %10d %10.2f %10.2f' % row)
+    for name, shares, price, change in report:
+            print(f'{name:>10s} {shares:>10d} {price:>10.2f} {change:>10.2f}')
+
+print_report(report)
